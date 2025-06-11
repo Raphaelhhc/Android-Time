@@ -5,7 +5,7 @@ Architecture design
     - Functional requirements
         - World clock: Display current time for various global cities
         - Alarm: Set alarms to ring at specific times; support add, modify, delete operations
-        - Stopwatch: Start, pause, reset; counts elapsed time from 0 seconds
+        - Stopwatch: Start, pause, reset; counts elapsed time from 0 seconds and record lap time
         - Timer: Set duration, start counting down, pause, and reset to the original duration
     - Non-functional requirements
         - Low Latency: Real-time display updates with minimal delay
@@ -29,7 +29,7 @@ Architecture design
                 - Buttons for adding, modifying, and deleting alarms
             - StopwatchScreen
                 - Display elapsed time
-                - Buttons: Start, Pause, Reset
+                - Buttons: Start, Pause, Reset, Lap
             - TimerScreen
                 - Display countdown time
                 - Buttons: Start, Pause, Reset
