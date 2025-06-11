@@ -1,7 +1,6 @@
 package com.example.timeapp.ui.stopwatch
 
 import android.os.SystemClock
-import android.util.Log
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -10,11 +9,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+private const val REFRESH_INTERVAL_MS = 16L
 
 @HiltViewModel
 class StopwatchViewModel @Inject constructor() : ViewModel() {
@@ -45,7 +45,7 @@ class StopwatchViewModel @Inject constructor() : ViewModel() {
                         while (_stopwatchState.value == StopwatchState.RUNNING) {
                             val currentTime = SystemClock.elapsedRealtime()
                             _elapsedTime.longValue = accumulatedTime + (currentTime - startTime)
-                            delay(16L)
+                            delay(REFRESH_INTERVAL_MS)
                         }
 
                     }

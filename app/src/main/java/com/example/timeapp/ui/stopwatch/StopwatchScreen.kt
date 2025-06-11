@@ -1,7 +1,6 @@
 package com.example.timeapp.ui.stopwatch
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,8 +9,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -86,15 +85,14 @@ fun StopwatchScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         // List of lap time records
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
-                .verticalScroll(state = rememberScrollState()),
+                .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
-            vm.lapTimeRecords.forEach { value ->
+            items(vm.lapTimeRecords) {value ->
                 Text(text = formatTime(value))
             }
         }
@@ -104,8 +102,8 @@ fun StopwatchScreen(
 // Format timestamp to 00:00.00
 @SuppressLint("DefaultLocale")
 fun formatTime(elapsedTime: Long): String {
-    val totalSeconds = elapsedTime / 1_000.0
-    val minutes = (totalSeconds / 60.0).toInt()
-    val seconds = totalSeconds % 60
-    return String.format("%02d:%05.2f", minutes, seconds)
+    val minutes = (elapsedTime / 60_000).toInt()
+    val seconds = ((elapsedTime / 1_000) % 60).toInt()
+    val centiSeconds = ((elapsedTime % 1_000) / 10).toInt()
+    return String.format("%02d:%02d.%02d", minutes, seconds, centiSeconds)
 }
