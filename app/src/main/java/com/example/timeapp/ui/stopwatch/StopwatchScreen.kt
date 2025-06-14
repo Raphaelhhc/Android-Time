@@ -33,7 +33,7 @@ fun StopwatchScreen(
     ) {
         Text(
             text = "Stopwatch",
-            fontSize = 20.sp
+            fontSize = 20.sp,
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -41,7 +41,7 @@ fun StopwatchScreen(
         // Current elapsed time
         Text(
             text = formatTime(vm.elapsedTime.longValue),
-            fontSize = 30.sp
+            fontSize = 30.sp,
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -99,7 +99,7 @@ fun StopwatchScreen(
     }
 }
 
-// Format timestamp to 00:00.00
+// Format timestamp to mm:ss.ss
 @SuppressLint("DefaultLocale")
 fun formatTime(elapsedTime: Long): String {
     val minutes = (elapsedTime / 60_000).toInt()
