@@ -30,6 +30,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.timeapp.presentation.alarm.AlarmScreen
 import com.example.timeapp.presentation.stopwatch.StopwatchScreen
 import com.example.timeapp.presentation.timer.TimerScreen
+import com.example.timeapp.presentation.world_clock.AddCityScreen
 import com.example.timeapp.presentation.world_clock.WorldClockScreen
 import kotlinx.serialization.Serializable
 
@@ -79,7 +80,10 @@ fun MainScreen(
             Modifier.padding(innerPadding)
         ) {
             composable<WorldClockScreen> {
-                WorldClockScreen()
+                WorldClockScreen(navController = navController)
+            }
+            composable<AddCityScreen> {
+                AddCityScreen(navController = navController)
             }
             composable<AlarmScreen> {
                 AlarmScreen()
@@ -105,6 +109,9 @@ val topLevelRoutes = listOf(
 
 @Serializable
 object WorldClockScreen
+
+@Serializable
+object AddCityScreen
 
 @Serializable
 object AlarmScreen
