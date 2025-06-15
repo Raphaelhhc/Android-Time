@@ -3,6 +3,7 @@ package com.example.timeapp.presentation.world_clock
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,6 +23,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.timeapp.presentation.AddCityScreen
 import com.example.timeapp.presentation.timer.TimerViewModel
+import java.time.LocalTime
 
 @Composable
 fun WorldClockScreen(
@@ -42,12 +44,27 @@ fun WorldClockScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // TODO Column to display selected city and time
+        // Column to display selected cities and their time
         LazyColumn(
-            modifier = Modifier.fillMaxWidth().weight(1f),
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
         ) {
             items(vm.selectedCityTime.size) { idx ->
-                // TODO Display City name - Local Time - Delete button
+                val zoneId = vm.selectedCityTime[idx].first
+                val time = vm.selectedCityTime[idx].second
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text("${vm.getCityName(zoneId)} - ${formatLocalTime(time)}")
+                    Button(onClick = { vm.deleteCityTime(zoneId) }) {
+                        Text("Delete")
+                    }
+                }
             }
         }
 
@@ -84,12 +101,27 @@ fun AddCityScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // TODO Column to display selected city and time
+        // Column to display all available cities that are not selected
         LazyColumn(
-            modifier = Modifier.fillMaxWidth().weight(1f),
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
         ) {
             items(vm.allCityTime.size) { idx ->
-                // TODO Display City name - Local Time - Add button
+                val zoneId = vm.allCityTime[idx].first
+                val time = vm.allCityTime[idx].second
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text("${vm.getCityName(zoneId)} - ${formatLocalTime(time)}")
+                    Button(onClick = { vm.addCityTime(zoneId) }) {
+                        Text("Add")
+                    }
+                }
             }
         }
 
@@ -105,4 +137,8 @@ fun AddCityScreen(
             Text("Back")
         }
     }
+}
+
+private fun formatLocalTime(time: LocalTime): String {
+    return time.format(java.time.format.DateTimeFormatter.ofPattern("HH:mm"))
 }
