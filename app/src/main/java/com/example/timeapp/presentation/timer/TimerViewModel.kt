@@ -1,7 +1,6 @@
 package com.example.timeapp.presentation.timer
 
 import android.os.SystemClock
-import android.util.Log
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshotFlow
@@ -55,6 +54,9 @@ class TimerViewModel @Inject constructor(
                             val currentTime = SystemClock.elapsedRealtime()
                             elapsedTime = accumulatedTime + (currentTime - startTime)
                             _countDownTime.longValue = (initialCountDownTime - elapsedTime).coerceAtLeast(0L)
+                            if (_countDownTime.longValue == 0L) {
+                                _timerState.value = TimerState.DEFAULT
+                            }
                             delay(REFRESH_INTERVAL_MS)
                         }
 
@@ -86,8 +88,12 @@ class TimerViewModel @Inject constructor(
     fun onClickStart() {
         initialCountDownTime = _countDownTime.longValue
         startTime = SystemClock.elapsedRealtime()
-        alarmScheduler.schedule(initialCountDownTime)
-        _timerState.value = TimerState.RUNNING
+        if (alarmScheduler.canScheduleExactAlarms()) {
+            alarmScheduler.schedule(initialCountDownTime)
+            _timerState.value = TimerState.RUNNING
+        } else {
+            alarmScheduler.requestExactAlarmPermission()
+        }
     }
 
     fun onClickPause() {
