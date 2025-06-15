@@ -36,23 +36,42 @@ class WorldClockViewModel @Inject constructor(
     }
 
     private fun fetchAllCityTime(allZoneIds: List<String>) {
-        // TODO Make list of all city time from list of all zone ids
+        _allCityTime.clear()
+        allZoneIds.forEach { zoneId ->
+            _allCityTime.add(zoneId to worldClockRepository.getCityTime(zoneId))
+        }
     }
 
     private fun updateSelectedCityTime() {
-        // TODO Update local time for cities in selected city time list
+        for (i in _selectedCityTime.indices) {
+            val zoneId = _selectedCityTime[i].first
+            _selectedCityTime[i] = zoneId to worldClockRepository.getCityTime(zoneId)
+        }
     }
 
     private fun updateAllCityTime() {
-        // TODO Update local time for cities in all city time list
+        for (i in _allCityTime.indices) {
+            val zoneId = _allCityTime[i].first
+            _allCityTime[i] = zoneId to worldClockRepository.getCityTime(zoneId)
+        }
     }
 
     fun addCityTime(zoneId: String) {
-        // TODO: add city time in selectedCityTime with zoneId and remove the city from allCityTime
+        val time = worldClockRepository.getCityTime(zoneId)
+        _selectedCityTime.add(zoneId to time)
+        val idx = _allCityTime.indexOfFirst { it.first == zoneId }
+        if (idx >= 0) _allCityTime.removeAt(idx)
     }
 
     fun deleteCityTime(zoneId: String) {
-        // TODO: delete city time from selectedCityTime with zoneId and add back the city from allCityTime
+        val idx = _selectedCityTime.indexOfFirst { it.first == zoneId }
+        if (idx >= 0) _selectedCityTime.removeAt(idx)
+        val time = worldClockRepository.getCityTime(zoneId)
+        if (_allCityTime.none { it.first == zoneId }) {
+            _allCityTime.add(zoneId to time)
+        }
     }
+
+    fun getCityName(zoneId: String): String = worldClockRepository.getCityName(zoneId)
 
 }

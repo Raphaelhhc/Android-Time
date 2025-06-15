@@ -22,11 +22,19 @@ class WorldClockRepository @Inject constructor(private val context: Context) {
     }
 
     private fun getCityName(zoneId: String): String {
-        // TODO: Get city name from zone id
+        // Get the human readable city name from the given zone id. A zone id
+        // typically looks like "Continent/City" or "Continent/Area/City".
+        // We simply take the last path segment and replace underscores with
+        // spaces so that "Asia/Taipei" becomes "Taipei".
+        return zoneId.substringAfterLast('/')
+            .replace('_', ' ')
     }
 
     private fun getCityTime(zoneId: String): LocalTime {
-        // TODO: Get city local time from zone id
+        // Return the current local time of the provided zone id.
+        // ZonedDateTime.now(zoneId).toLocalTime() is used so the value is
+        // independent of the device time zone.
+        return ZonedDateTime.now(ZoneId.of(zoneId)).toLocalTime()
     }
 
 }
