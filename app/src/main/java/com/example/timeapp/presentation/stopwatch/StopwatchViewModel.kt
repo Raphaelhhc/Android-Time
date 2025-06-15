@@ -1,4 +1,4 @@
-package com.example.timeapp.ui.stopwatch
+package com.example.timeapp.presentation.stopwatch
 
 import android.os.SystemClock
 import androidx.compose.runtime.mutableLongStateOf

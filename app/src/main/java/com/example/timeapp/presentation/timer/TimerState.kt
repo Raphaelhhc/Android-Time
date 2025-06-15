@@ -1,4 +1,4 @@
-package com.example.timeapp.ui.timer
+package com.example.timeapp.presentation.timer
 
 enum class TimerState {
     DEFAULT,

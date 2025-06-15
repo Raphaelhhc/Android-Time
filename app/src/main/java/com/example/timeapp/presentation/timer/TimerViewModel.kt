@@ -1,4 +1,4 @@
-package com.example.timeapp.ui.timer
+package com.example.timeapp.presentation.timer
 
 import android.os.SystemClock
 import android.util.Log
@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.timeapp.presentation.timer.notification.TimerAlarmScheduler
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -17,7 +18,9 @@ import javax.inject.Inject
 private const val REFRESH_INTERVAL_MS = 16L
 
 @HiltViewModel
-class TimerViewModel @Inject constructor() : ViewModel() {
+class TimerViewModel @Inject constructor(
+    private val alarmScheduler: TimerAlarmScheduler
+) : ViewModel() {
 
     // Time set from UI
     private var setHours = 0
@@ -68,24 +71,22 @@ class TimerViewModel @Inject constructor() : ViewModel() {
     fun onSetHours(hour: Int) {
         setHours = hour
         updateCountDownTime()
-        Log.d("VM", "update time | set hour $setHours | countdown time ${_countDownTime.value}")
     }
 
     fun onSetMinutes(minute: Int) {
         setMinutes = minute
         updateCountDownTime()
-        Log.d("VM", "update time | set minute $setMinutes | countdown time ${_countDownTime.value}")
     }
 
     fun onSetSeconds(second: Int) {
         setSeconds = second
         updateCountDownTime()
-        Log.d("VM", "update time | set second $setSeconds | countdown time ${_countDownTime.value}")
     }
 
     fun onClickStart() {
         initialCountDownTime = _countDownTime.longValue
         startTime = SystemClock.elapsedRealtime()
+        alarmScheduler.schedule(initialCountDownTime)
         _timerState.value = TimerState.RUNNING
     }
 
@@ -93,10 +94,12 @@ class TimerViewModel @Inject constructor() : ViewModel() {
         val now = SystemClock.elapsedRealtime()
         elapsedTime = accumulatedTime + (now - startTime)
         accumulatedTime = elapsedTime
+        alarmScheduler.cancel()
         _timerState.value = TimerState.PAUSE
     }
 
     fun onClickCancel() {
+        alarmScheduler.cancel()
         _timerState.value = TimerState.DEFAULT
         startTime = 0L
         accumulatedTime = 0L

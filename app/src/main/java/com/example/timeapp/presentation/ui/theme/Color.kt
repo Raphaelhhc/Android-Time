@@ -1,4 +1,4 @@
-package com.example.timeapp.ui.theme
+package com.example.timeapp.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

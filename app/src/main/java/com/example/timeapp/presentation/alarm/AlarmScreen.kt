@@ -1,4 +1,4 @@
-package com.example.timeapp.ui.world_clock
+package com.example.timeapp.presentation.alarm
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -9,11 +9,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 
 @Composable
-fun WorldClockScreen() {
+fun AlarmScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        Text("WorldClock")
+        Text("Alarm")
     }
 }

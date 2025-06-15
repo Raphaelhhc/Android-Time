@@ -1,6 +1,5 @@
-package com.example.timeapp.ui
+package com.example.timeapp.presentation
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 //noinspection UsingMaterialAndMaterial3Libraries
@@ -28,10 +27,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.timeapp.ui.alarm.AlarmScreen
-import com.example.timeapp.ui.stopwatch.StopwatchScreen
-import com.example.timeapp.ui.timer.TimerScreen
-import com.example.timeapp.ui.world_clock.WorldClockScreen
+import com.example.timeapp.presentation.alarm.AlarmScreen
+import com.example.timeapp.presentation.stopwatch.StopwatchScreen
+import com.example.timeapp.presentation.timer.TimerScreen
+import com.example.timeapp.presentation.world_clock.WorldClockScreen
 import kotlinx.serialization.Serializable
 
 @Composable

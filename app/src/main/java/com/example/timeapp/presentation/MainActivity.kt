@@ -1,11 +1,11 @@
-package com.example.timeapp.ui
+package com.example.timeapp.presentation
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.navigation.compose.rememberNavController
-import com.example.timeapp.ui.theme.TimeAppTheme
+import com.example.timeapp.presentation.ui.theme.TimeAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

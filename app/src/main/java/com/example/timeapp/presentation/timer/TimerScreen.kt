@@ -1,4 +1,4 @@
-package com.example.timeapp.ui.timer
+package com.example.timeapp.presentation.timer
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
