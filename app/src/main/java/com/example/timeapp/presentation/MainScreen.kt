@@ -80,10 +80,10 @@ fun MainScreen(
             Modifier.padding(innerPadding)
         ) {
             composable<WorldClockScreen> {
-                WorldClockScreen(navController = navController)
+                WorldClockScreen(nv = navController)
             }
             composable<AddCityScreen> {
-                AddCityScreen(navController = navController)
+                AddCityScreen(nv = navController)
             }
             composable<AlarmScreen> {
                 AlarmScreen()

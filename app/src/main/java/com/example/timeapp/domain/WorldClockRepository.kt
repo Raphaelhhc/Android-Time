@@ -21,7 +21,7 @@ class WorldClockRepository @Inject constructor(private val context: Context) {
         }
     }
 
-    private fun getCityName(zoneId: String): String {
+    fun getCityName(zoneId: String): String {
         // Get the human readable city name from the given zone id. A zone id
         // typically looks like "Continent/City" or "Continent/Area/City".
         // We simply take the last path segment and replace underscores with
@@ -30,7 +30,7 @@ class WorldClockRepository @Inject constructor(private val context: Context) {
             .replace('_', ' ')
     }
 
-    private fun getCityTime(zoneId: String): LocalTime {
+    fun getCityTime(zoneId: String): LocalTime {
         // Return the current local time of the provided zone id.
         // ZonedDateTime.now(zoneId).toLocalTime() is used so the value is
         // independent of the device time zone.
