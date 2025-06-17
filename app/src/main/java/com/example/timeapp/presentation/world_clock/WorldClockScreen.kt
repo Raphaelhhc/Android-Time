@@ -1,5 +1,6 @@
 package com.example.timeapp.presentation.world_clock
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,6 +20,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.timeapp.presentation.AddCityScreen
+import com.example.timeapp.presentation.WorldClockScreen
 import java.time.LocalTime
 
 @Composable
@@ -26,6 +28,7 @@ fun WorldClockScreen(
     vm: WorldClockViewModel = hiltViewModel(),
     nv: NavController
 ) {
+    Log.d("SCREEN", "${vm.selectedCityTime.toList()}")
     Column(
         modifier = Modifier
             .fillMaxSize()

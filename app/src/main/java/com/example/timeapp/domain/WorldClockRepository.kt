@@ -3,6 +3,7 @@ package com.example.timeapp.domain
 import android.content.Context
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.time.LocalTime
 import java.time.ZoneId
@@ -11,14 +12,14 @@ import javax.inject.Inject
 
 class WorldClockRepository @Inject constructor(private val context: Context) {
 
-    lateinit var allZoneIds: List<String>
-
     private val scope = CoroutineScope(Dispatchers.Default)
 
-    init {
-        scope.launch {
-            allZoneIds = ZoneId.getAvailableZoneIds().sorted()
-        }
+    private val allZoneIdsDeferred = scope.async {
+        ZoneId.getAvailableZoneIds().sorted()
+    }
+
+    suspend fun getAllZoneIds(): List<String> {
+        return allZoneIdsDeferred.await()
     }
 
     fun getCityName(zoneId: String): String {
