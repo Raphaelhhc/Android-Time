@@ -4,7 +4,6 @@ import android.content.Context
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
 import java.time.LocalTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -15,7 +14,7 @@ class WorldClockRepository @Inject constructor(private val context: Context) {
     private val scope = CoroutineScope(Dispatchers.Default)
 
     private val allZoneIdsDeferred = scope.async {
-        ZoneId.getAvailableZoneIds().sorted()
+        ZoneId.getAvailableZoneIds().sorted().subList(0, 10)
     }
 
     suspend fun getAllZoneIds(): List<String> {

@@ -1,5 +1,6 @@
 package com.example.timeapp.presentation
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 //noinspection UsingMaterialAndMaterial3Libraries
@@ -14,12 +15,14 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -32,8 +35,10 @@ import com.example.timeapp.presentation.stopwatch.StopwatchScreen
 import com.example.timeapp.presentation.timer.TimerScreen
 import com.example.timeapp.presentation.world_clock.AddCityScreen
 import com.example.timeapp.presentation.world_clock.WorldClockScreen
+import com.example.timeapp.presentation.world_clock.WorldClockViewModel
 import kotlinx.serialization.Serializable
 
+@SuppressLint("UnrememberedGetBackStackEntry")
 @Composable
 fun MainScreen(
     navController: NavHostController
@@ -80,10 +85,21 @@ fun MainScreen(
             Modifier.padding(innerPadding)
         ) {
             composable<WorldClockScreen> {
-                WorldClockScreen(nv = navController)
+                val vm: WorldClockViewModel = hiltViewModel()
+                WorldClockScreen(
+                    vm = vm,
+                    nv = navController
+                )
             }
             composable<AddCityScreen> {
-                AddCityScreen(nv = navController)
+                val parentEntry = remember(navController) {
+                    navController.getBackStackEntry(WorldClockScreen)
+                }
+                val vm: WorldClockViewModel = hiltViewModel(parentEntry)
+                AddCityScreen(
+                    vm = vm,
+                    nv = navController
+                )
             }
             composable<AlarmScreen> {
                 AlarmScreen()

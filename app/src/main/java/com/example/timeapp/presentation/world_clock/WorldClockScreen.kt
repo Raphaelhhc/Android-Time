@@ -20,12 +20,11 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.timeapp.presentation.AddCityScreen
-import com.example.timeapp.presentation.WorldClockScreen
 import java.time.LocalTime
 
 @Composable
 fun WorldClockScreen(
-    vm: WorldClockViewModel = hiltViewModel(),
+    vm: WorldClockViewModel,
     nv: NavController
 ) {
     Log.d("SCREEN", "${vm.selectedCityTime.toList()}")
@@ -83,7 +82,7 @@ fun WorldClockScreen(
 
 @Composable
 fun AddCityScreen(
-    vm: WorldClockViewModel = hiltViewModel(),
+    vm: WorldClockViewModel,
     nv: NavController
 ) {
     Column(

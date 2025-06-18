@@ -50,6 +50,9 @@ class WorldClockViewModel @Inject constructor(
         val time = worldClockRepository.getCityTime(zoneId)
         if (_allCityTime.none { it.first == zoneId }) {
             _allCityTime.add(zoneId to time)
+            Log.d("VM", "before sort ${_allCityTime.toList()}")
+            _allCityTime.sortedBy { it.first }
+            Log.d("VM", "after sort ${_allCityTime.toList()}")
         }
     }
 
