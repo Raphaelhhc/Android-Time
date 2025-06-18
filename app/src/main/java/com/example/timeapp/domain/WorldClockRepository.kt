@@ -14,7 +14,7 @@ class WorldClockRepository @Inject constructor(private val context: Context) {
     private val scope = CoroutineScope(Dispatchers.Default)
 
     private val allZoneIdsDeferred = scope.async {
-        ZoneId.getAvailableZoneIds().sorted().subList(0, 10)
+        ZoneId.getAvailableZoneIds().sorted()
     }
 
     suspend fun getAllZoneIds(): List<String> {
