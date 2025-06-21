@@ -1,4 +1,4 @@
-package com.example.timeapp.presentation.timer
+package com.example.timeapp.presentation
 
 val HOURS = (0..23).toList()
 

@@ -1,5 +1,6 @@
 package com.example.timeapp.presentation.alarm
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,9 +31,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.CardElevation
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.snapshotFlow
-import com.example.timeapp.presentation.timer.HOURS
-import com.example.timeapp.presentation.timer.MINUTES
+import com.example.timeapp.presentation.HOURS
+import com.example.timeapp.presentation.MINUTES
 import kotlinx.coroutines.flow.distinctUntilChanged
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -76,52 +79,58 @@ fun AlarmScreen(
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(300.dp),
+                        .height(100.dp),
                 ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(4.dp),
-                        horizontalArrangement = Arrangement.SpaceEvenly,
-                        verticalAlignment = Alignment.CenterVertically
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
                     ) {
-                        Text(formatLocalTime(alarm.alarmTime))
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(4.dp),
+                            horizontalArrangement = Arrangement.SpaceEvenly,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(formatLocalTime(alarm.alarmTime))
 
-                        Button(
-                            onClick = {
+                            Button(
+                                onClick = {
+                                    if (alarm.activated) {
+                                        vm.inactivateAlarm(alarm.id)
+                                    } else {
+                                        vm.activateAlarm(alarm.id)
+                                    }
+                                },
+                            ) {
                                 if (alarm.activated) {
-                                    vm.inactivateAlarm(alarm.id)
+                                    Text("Turn Off")
                                 } else {
-                                    vm.activateAlarm(alarm.id)
+                                    Text("Turn On")
                                 }
-                            },
-                        ) {
-                            if (alarm.activated) {
-                                Text("Turn Off")
-                            } else {
-                                Text("Turn On")
                             }
-                        }
 
-                        Button(
-                            onClick = {
-                                isAddingAlarm = false
-                                isEditingAlarm = true
-                                editingAlarmId = alarm.id
+                            Button(
+                                onClick = {
+                                    isAddingAlarm = false
+                                    isEditingAlarm = true
+                                    editingAlarmId = alarm.id
+                                }
+                            ) {
+                                Text("Edit")
                             }
-                        ) {
-                            Text("Edit")
-                        }
 
-                        Button(
-                            onClick = {
-                                vm.deleteAlarm(alarm.id)
+                            Button(
+                                onClick = {
+                                    vm.deleteAlarm(alarm.id)
+                                }
+                            ) {
+                                Text("Delete")
                             }
-                        ) {
-                            Text("Delete")
                         }
                     }
                 }
+                Spacer(modifier = Modifier.height(8.dp))
 
             }
         }
@@ -174,6 +183,7 @@ fun AlarmScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddAlarmDrawer(
     onDismiss: () -> Unit,
@@ -216,35 +226,55 @@ fun AddAlarmDrawer(
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                TimePickerColumn(state = hourState, items = HOURS)
+                TimePickerColumn(
+                    modifier = Modifier.weight(1f),
+                    state = hourState,
+                    items = HOURS
+                )
+
                 Text(":", fontSize = 24.sp)
-                TimePickerColumn(state = minuteState, items = MINUTES)
+
+                TimePickerColumn(
+                    modifier = Modifier.weight(1f),
+                    state = minuteState,
+                    items = MINUTES
+                )
             }
+
             Spacer(modifier = Modifier.height(16.dp))
+
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
                     onCreate(LocalTime.of(selectedHour, selectedMinute))
                 }
             ) { Text("Create") }
+
             Spacer(modifier = Modifier.height(8.dp))
+
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray, contentColor = Color.Black),
                 onClick = onDismiss
             ) { Text("Close") }
+
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditAlarmDrawer(
     alarm: Alarm,
     onDismiss: () -> Unit,
     onConfirm: (LocalTime) -> Unit
 ) {
-    val hourState = rememberLazyListState(initialFirstVisibleItemIndex = alarm.alarmTime.hour)
-    val minuteState = rememberLazyListState(initialFirstVisibleItemIndex = alarm.alarmTime.minute)
+    val hourState = rememberLazyListState(
+        initialFirstVisibleItemIndex = alarm.alarmTime.hour
+    )
+    val minuteState = rememberLazyListState(
+        initialFirstVisibleItemIndex = alarm.alarmTime.minute
+    )
 
     var selectedHour by remember { mutableIntStateOf(alarm.alarmTime.hour) }
     var selectedMinute by remember { mutableIntStateOf(alarm.alarmTime.minute) }
@@ -272,7 +302,9 @@ fun EditAlarmDrawer(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text("Edit Alarm", fontSize = 20.sp)
+
             Spacer(modifier = Modifier.height(16.dp))
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -280,32 +312,52 @@ fun EditAlarmDrawer(
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                TimePickerColumn(state = hourState, items = HOURS)
+                TimePickerColumn(
+                    modifier = Modifier.weight(1f),
+                    state = hourState,
+                    items = HOURS
+                )
+
                 Text(":", fontSize = 24.sp)
-                TimePickerColumn(state = minuteState, items = MINUTES)
+
+                TimePickerColumn(
+                    modifier = Modifier.weight(1f),
+                    state = minuteState,
+                    items = MINUTES
+                )
             }
+
             Spacer(modifier = Modifier.height(16.dp))
+
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
                     onConfirm(LocalTime.of(selectedHour, selectedMinute))
                 }
             ) { Text("Confirm") }
+
             Spacer(modifier = Modifier.height(8.dp))
+
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray, contentColor = Color.Black),
                 onClick = onDismiss
             ) { Text("Close") }
+
         }
     }
 }
 
+@SuppressLint("DefaultLocale")
 @Composable
-private fun TimePickerColumn(state: LazyListState, items: List<Int>) {
+private fun TimePickerColumn(
+    modifier: Modifier,
+    state: LazyListState,
+    items: List<Int>
+) {
     LazyColumn(
         state = state,
-        modifier = Modifier.weight(1f),
+        modifier = modifier,
         contentPadding = PaddingValues(vertical = ITEM_HEIGHT * CENTER_OFFSET),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

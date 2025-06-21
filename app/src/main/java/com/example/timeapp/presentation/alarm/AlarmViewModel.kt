@@ -1,5 +1,6 @@
 package com.example.timeapp.presentation.alarm
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import com.example.timeapp.presentation.alarm.notification.AlarmScheduler
@@ -47,9 +48,6 @@ class AlarmViewModel @Inject constructor(
     ) {
         val idx = alarms.indexOfFirst { it.id == id }
         alarms[idx].alarmTime = alarmTime
-        if (alarms[idx].activated) {
-            scheduleAlarm(alarms[idx])
-        }
     }
 
     fun activateAlarm(id: String) {
