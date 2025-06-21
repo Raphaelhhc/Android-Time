@@ -5,6 +5,6 @@ import java.time.LocalTime
 data class Alarm(
     val id: String,
     val createdAt: Long,
-    var alarmTime: LocalTime,
-    var activated: Boolean
+    val alarmTime: LocalTime,
+    val activated: Boolean
 )

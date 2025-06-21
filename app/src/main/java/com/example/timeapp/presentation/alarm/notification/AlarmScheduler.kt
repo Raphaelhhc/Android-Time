@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.provider.Settings
+import android.util.Log
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -46,11 +47,14 @@ class AlarmScheduler @Inject constructor(private  val context: Context) {
         )
 
         var alarmDateTime = LocalDateTime.of(LocalDate.now(), alarmTime)
+        Log.d("SCHEDULE", "alarmDateTime: $alarmDateTime")
         val nowDateTime = LocalDateTime.now()
+        Log.d("SCHEDULE", "nowDatetime: $nowDateTime")
         if (!alarmDateTime.isAfter(nowDateTime)) {
             alarmDateTime = alarmDateTime.plusDays(1)
         }
         val triggerAt = alarmDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+        Log.d("SCHEDULE", "triggerAt: $triggerAt")
 
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,

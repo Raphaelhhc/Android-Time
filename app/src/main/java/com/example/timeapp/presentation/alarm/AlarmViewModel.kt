@@ -47,19 +47,28 @@ class AlarmViewModel @Inject constructor(
         alarmTime: LocalTime,
     ) {
         val idx = alarms.indexOfFirst { it.id == id }
-        alarms[idx].alarmTime = alarmTime
+        if (idx >= 0) {
+            val updated = alarms[idx].copy(alarmTime = alarmTime)
+            alarms[idx] = updated
+        }
     }
 
     fun activateAlarm(id: String) {
         val idx = alarms.indexOfFirst { it.id == id }
-        alarms[idx].activated = true
-        scheduleAlarm(alarms[idx])
+        if (idx >= 0) {
+            val updated = alarms[idx].copy(activated = true)
+            alarms[idx] = updated
+            scheduleAlarm(alarms[idx])
+        }
     }
 
     fun inactivateAlarm(id: String) {
         val idx = alarms.indexOfFirst { it.id == id }
-        alarms[idx].activated = false
-        cancelAlarm(alarms[idx])
+        if (idx >= 0) {
+            val updated = alarms[idx].copy(activated = false)
+            alarms[idx] = updated
+            cancelAlarm(updated)
+        }
     }
 
     private fun scheduleAlarm(alarm: Alarm) {
