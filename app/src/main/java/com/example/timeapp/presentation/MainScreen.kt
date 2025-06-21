@@ -31,8 +31,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.timeapp.presentation.alarm.AlarmScreen
+import com.example.timeapp.presentation.alarm.AlarmViewModel
 import com.example.timeapp.presentation.stopwatch.StopwatchScreen
+import com.example.timeapp.presentation.stopwatch.StopwatchViewModel
 import com.example.timeapp.presentation.timer.TimerScreen
+import com.example.timeapp.presentation.timer.TimerViewModel
 import com.example.timeapp.presentation.world_clock.AddCityScreen
 import com.example.timeapp.presentation.world_clock.WorldClockScreen
 import com.example.timeapp.presentation.world_clock.WorldClockViewModel
@@ -85,7 +88,7 @@ fun MainScreen(
             Modifier.padding(innerPadding)
         ) {
             composable<WorldClockScreen> {
-                val vm: WorldClockViewModel = hiltViewModel()
+                val vm = hiltViewModel<WorldClockViewModel>()
                 WorldClockScreen(
                     vm = vm,
                     nv = navController
@@ -102,13 +105,19 @@ fun MainScreen(
                 )
             }
             composable<AlarmScreen> {
-                AlarmScreen()
+                AlarmScreen(
+                    vm = hiltViewModel<AlarmViewModel>()
+                )
             }
             composable<StopwatchScreen> {
-                StopwatchScreen()
+                StopwatchScreen(
+                    vm = hiltViewModel<StopwatchViewModel>()
+                )
             }
             composable<TimerScreen> {
-                TimerScreen()
+                TimerScreen(
+                    vm = hiltViewModel<TimerViewModel>()
+                )
             }
         }
     }

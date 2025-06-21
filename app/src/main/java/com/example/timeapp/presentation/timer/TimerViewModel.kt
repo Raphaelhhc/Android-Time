@@ -18,7 +18,7 @@ private const val REFRESH_INTERVAL_MS = 16L
 
 @HiltViewModel
 class TimerViewModel @Inject constructor(
-    private val alarmScheduler: TimerAlarmScheduler
+    private val timerAlarmScheduler: TimerAlarmScheduler
 ) : ViewModel() {
 
     // Time set from UI
@@ -88,11 +88,11 @@ class TimerViewModel @Inject constructor(
     fun onClickStart() {
         initialCountDownTime = _countDownTime.longValue
         startTime = SystemClock.elapsedRealtime()
-        if (alarmScheduler.canScheduleExactAlarms()) {
-            alarmScheduler.schedule(initialCountDownTime)
+        if (timerAlarmScheduler.canScheduleExactAlarms()) {
+            timerAlarmScheduler.schedule(initialCountDownTime)
             _timerState.value = TimerState.RUNNING
         } else {
-            alarmScheduler.requestExactAlarmPermission()
+            timerAlarmScheduler.requestExactAlarmPermission()
         }
     }
 
@@ -100,12 +100,12 @@ class TimerViewModel @Inject constructor(
         val now = SystemClock.elapsedRealtime()
         elapsedTime = accumulatedTime + (now - startTime)
         accumulatedTime = elapsedTime
-        alarmScheduler.cancel()
+        timerAlarmScheduler.cancel()
         _timerState.value = TimerState.PAUSE
     }
 
     fun onClickCancel() {
-        alarmScheduler.cancel()
+        timerAlarmScheduler.cancel()
         _timerState.value = TimerState.DEFAULT
         startTime = 0L
         accumulatedTime = 0L

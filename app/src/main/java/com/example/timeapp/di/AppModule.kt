@@ -2,6 +2,7 @@ package com.example.timeapp.di
 
 import android.content.Context
 import com.example.timeapp.domain.WorldClockRepository
+import com.example.timeapp.presentation.alarm.notification.AlarmScheduler
 import com.example.timeapp.presentation.timer.notification.TimerAlarmScheduler
 import dagger.Module
 import dagger.Provides
@@ -17,6 +18,11 @@ object AppModule {
     @Provides
     fun provideTimerAlarmScheduler(@ApplicationContext context: Context): TimerAlarmScheduler {
         return TimerAlarmScheduler(context)
+    }
+
+    @Provides
+    fun provideAlarmScheduler(@ApplicationContext context: Context): AlarmScheduler {
+        return AlarmScheduler(context)
     }
 
     @Provides

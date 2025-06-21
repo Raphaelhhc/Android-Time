@@ -1,15 +1,18 @@
-package com.example.timeapp.presentation.timer.notification
+package com.example.timeapp.presentation.alarm.notification
 
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.os.SystemClock
 import android.provider.Settings
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.ZoneId
 import javax.inject.Inject
 
-class TimerAlarmScheduler @Inject constructor(private val context: Context) {
+class AlarmScheduler @Inject constructor(private  val context: Context) {
 
     private val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
@@ -31,9 +34,9 @@ class TimerAlarmScheduler @Inject constructor(private val context: Context) {
         }
     }
 
-    fun schedule(delayMs: Long) {
+    fun schedule(alarmTime: LocalTime) {
 
-        val intent = Intent(context, TimerAlarmReceiver::class.java)
+        val intent = Intent(context, AlarmReceiver::class.java)
 
         val pending = PendingIntent.getBroadcast(
             context,
@@ -42,18 +45,24 @@ class TimerAlarmScheduler @Inject constructor(private val context: Context) {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        val triggerAt = SystemClock.elapsedRealtime() + delayMs
+        var alarmDateTime = LocalDateTime.of(LocalDate.now(), alarmTime)
+        val nowDateTime = LocalDateTime.now()
+        if (!alarmDateTime.isAfter(nowDateTime)) {
+            alarmDateTime = alarmDateTime.plusDays(1)
+        }
+        val triggerAt = alarmDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
 
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.ELAPSED_REALTIME_WAKEUP,
             triggerAt,
             pending
         )
+
     }
 
     fun cancel() {
 
-        val intent = Intent(context, TimerAlarmReceiver::class.java)
+        val intent = Intent(context, AlarmReceiver::class.java)
 
         val pending = PendingIntent.getBroadcast(
             context,

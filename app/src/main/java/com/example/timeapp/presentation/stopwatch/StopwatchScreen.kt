@@ -22,7 +22,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
 fun StopwatchScreen(
-    vm: StopwatchViewModel = hiltViewModel()
+    vm: StopwatchViewModel
 ) {
     Column(
         modifier = Modifier

@@ -31,7 +31,7 @@ private val CENTER_OFFSET = VISIBLE_COUNT / 2
 
 @Composable
 fun TimerScreen(
-    vm: TimerViewModel = hiltViewModel()
+    vm: TimerViewModel
 ) {
     // three list states
     val hourState = rememberLazyListState()

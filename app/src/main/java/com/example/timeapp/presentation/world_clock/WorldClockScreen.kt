@@ -17,7 +17,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.timeapp.presentation.AddCityScreen
 import java.time.LocalTime
@@ -27,7 +26,6 @@ fun WorldClockScreen(
     vm: WorldClockViewModel,
     nv: NavController
 ) {
-    Log.d("SCREEN", "${vm.selectedCityTime.toList()}")
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -138,5 +136,7 @@ fun AddCityScreen(
 }
 
 private fun formatLocalTime(time: LocalTime): String {
-    return time.format(java.time.format.DateTimeFormatter.ofPattern("HH:mm"))
+    return time.format(
+        java.time.format.DateTimeFormatter.ofPattern("HH:mm")
+    )
 }
