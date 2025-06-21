@@ -29,12 +29,16 @@ class AlarmViewModel @Inject constructor(
         alarms.add(newAlarm)
 
         if (newAlarm.activated) {
-            // Schedule alarm
+            scheduleAlarm(newAlarm)
         }
     }
 
     fun deleteAlarm(id: String) {
-        alarms.removeIf { it.id == id }
+        val alarm = alarms.firstOrNull { it.id == id }
+        if (alarm != null) {
+            if (alarm.activated) cancelAlarm(alarm)
+            alarms.remove(alarm)
+        }
     }
 
     fun editAlarm(
@@ -43,26 +47,33 @@ class AlarmViewModel @Inject constructor(
     ) {
         val idx = alarms.indexOfFirst { it.id == id }
         alarms[idx].alarmTime = alarmTime
+        if (alarms[idx].activated) {
+            scheduleAlarm(alarms[idx])
+        }
     }
 
     fun activateAlarm(id: String) {
         val idx = alarms.indexOfFirst { it.id == id }
         alarms[idx].activated = true
-        // Schedule alarm
+        scheduleAlarm(alarms[idx])
     }
 
     fun inactivateAlarm(id: String) {
         val idx = alarms.indexOfFirst { it.id == id }
         alarms[idx].activated = false
-        // Cancel alarm
+        cancelAlarm(alarms[idx])
     }
 
-    private fun scheduleAlarm() {
-        //
+    private fun scheduleAlarm(alarm: Alarm) {
+        if (alarmScheduler.canScheduleExactAlarms()) {
+            alarmScheduler.schedule(alarm.alarmTime, alarm.id)
+        } else {
+            alarmScheduler.requestExactAlarmPermission()
+        }
     }
 
-    private fun cancelAlarm() {
-        //
+    private fun cancelAlarm(alarm: Alarm) {
+        alarmScheduler.cancel(alarm.id)
     }
 
 }

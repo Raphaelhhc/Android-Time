@@ -34,13 +34,13 @@ class AlarmScheduler @Inject constructor(private  val context: Context) {
         }
     }
 
-    fun schedule(alarmTime: LocalTime) {
+    fun schedule(alarmTime: LocalTime, id: String) {
 
         val intent = Intent(context, AlarmReceiver::class.java)
 
         val pending = PendingIntent.getBroadcast(
             context,
-            0,
+            id.hashCode(),
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
@@ -53,20 +53,20 @@ class AlarmScheduler @Inject constructor(private  val context: Context) {
         val triggerAt = alarmDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
 
         alarmManager.setExactAndAllowWhileIdle(
-            AlarmManager.ELAPSED_REALTIME_WAKEUP,
+            AlarmManager.RTC_WAKEUP,
             triggerAt,
             pending
         )
 
     }
 
-    fun cancel() {
+    fun cancel(id: String) {
 
         val intent = Intent(context, AlarmReceiver::class.java)
 
         val pending = PendingIntent.getBroadcast(
             context,
-            0,
+            id.hashCode(),
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
