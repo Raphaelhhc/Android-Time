@@ -1,5 +1,6 @@
 package com.example.timeapp.presentation.alarm
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -25,6 +26,7 @@ class AlarmViewModel @Inject constructor(
         viewModelScope.launch {
             alarmDao.getAllAlarmsFlow().collectLatest { stored ->
                 updateAlarms(stored)
+                Log.d("VM", "alarms: ${alarms.toList()}")
             }
         }
     }
