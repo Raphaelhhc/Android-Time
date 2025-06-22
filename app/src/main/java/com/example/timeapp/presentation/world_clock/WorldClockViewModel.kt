@@ -1,11 +1,11 @@
 package com.example.timeapp.presentation.world_clock
 
-import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.timeapp.domain.WorldClockRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.time.LocalTime
 import javax.inject.Inject
@@ -25,32 +25,33 @@ class WorldClockViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             val allZoneIds = worldClockRepository.getAllZoneIds()
-            fetchAllCityTime(allZoneIds)
+            worldClockRepository.getSelectedZoneIds().collectLatest { selected ->
+                updateLists(allZoneIds, selected)
+            }
         }
     }
 
-    private fun fetchAllCityTime(allZoneIds: List<String>) {
+    private fun updateLists(allZoneIds: List<String>, selected: List<String>) {
+        _selectedCityTime.clear()
+        selected.forEach { zoneId ->
+            _selectedCityTime.add(zoneId to worldClockRepository.getCityTime(zoneId))
+        }
+
         _allCityTime.clear()
-        allZoneIds.forEach { zoneId ->
+        allZoneIds.filter { it !in selected }.forEach { zoneId ->
             _allCityTime.add(zoneId to worldClockRepository.getCityTime(zoneId))
         }
     }
 
     fun addCityTime(zoneId: String) {
-        val time = worldClockRepository.getCityTime(zoneId)
-        _selectedCityTime.add(zoneId to time)
-        val idx = _allCityTime.indexOfFirst { it.first == zoneId }
-        if (idx >= 0) _allCityTime.removeAt(idx)
-        Log.d("VM", "${_selectedCityTime.toList()}")
+        viewModelScope.launch {
+            worldClockRepository.addCity(zoneId)
+        }
     }
 
     fun deleteCityTime(zoneId: String) {
-        val idx = _selectedCityTime.indexOfFirst { it.first == zoneId }
-        if (idx >= 0) _selectedCityTime.removeAt(idx)
-        val time = worldClockRepository.getCityTime(zoneId)
-        if (_allCityTime.none { it.first == zoneId }) {
-            _allCityTime.add(zoneId to time)
-            _allCityTime.sortBy { it.first }
+        viewModelScope.launch {
+            worldClockRepository.deleteCity(zoneId)
         }
     }
 

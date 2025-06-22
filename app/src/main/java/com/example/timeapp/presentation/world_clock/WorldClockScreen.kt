@@ -1,6 +1,5 @@
 package com.example.timeapp.presentation.world_clock
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row

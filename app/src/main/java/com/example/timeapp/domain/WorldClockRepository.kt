@@ -1,15 +1,22 @@
 package com.example.timeapp.domain
 
 import android.content.Context
+import com.example.timeapp.data.world_clock.WorldClockCity
+import com.example.timeapp.data.world_clock.WorldClockDao
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import java.time.LocalTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import javax.inject.Inject
 
-class WorldClockRepository @Inject constructor(private val context: Context) {
+class WorldClockRepository @Inject constructor(
+    private val context: Context,
+    private val dao: WorldClockDao
+) {
 
     private val scope = CoroutineScope(Dispatchers.Default)
 
@@ -35,6 +42,18 @@ class WorldClockRepository @Inject constructor(private val context: Context) {
         // ZonedDateTime.now(zoneId).toLocalTime() is used so the value is
         // independent of the device time zone.
         return ZonedDateTime.now(ZoneId.of(zoneId)).toLocalTime()
+    }
+
+    fun getSelectedZoneIds(): Flow<List<String>> {
+        return dao.getAllCitiesFlow().map { list -> list.map { it.zoneId } }
+    }
+
+    suspend fun addCity(zoneId: String) {
+        dao.insert(WorldClockCity(zoneId))
+    }
+
+    suspend fun deleteCity(zoneId: String) {
+        dao.delete(zoneId)
     }
 
 }
