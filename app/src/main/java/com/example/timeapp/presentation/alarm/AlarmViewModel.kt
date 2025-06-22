@@ -59,7 +59,7 @@ class AlarmViewModel @Inject constructor(
         if (alarm != null) {
             if (alarm.activated) cancelAlarm(alarm)
             viewModelScope.launch {
-                alarmDao.delete(alarm.id)
+                alarmDao.delete(alarm)
             }
         }
     }
@@ -71,7 +71,9 @@ class AlarmViewModel @Inject constructor(
         val idx = alarms.indexOfFirst { it.id == id }
         if (idx >= 0) {
             val updated = alarms[idx].copy(alarmTime = alarmTime)
-            alarms[idx] = updated
+            viewModelScope.launch {
+                alarmDao.update(updated)
+            }
         }
     }
 
@@ -79,7 +81,9 @@ class AlarmViewModel @Inject constructor(
         val idx = alarms.indexOfFirst { it.id == id }
         if (idx >= 0) {
             val updated = alarms[idx].copy(activated = true)
-            alarms[idx] = updated
+            viewModelScope.launch {
+                alarmDao.update(updated)
+            }
             scheduleAlarm(alarms[idx])
         }
     }
@@ -88,7 +92,9 @@ class AlarmViewModel @Inject constructor(
         val idx = alarms.indexOfFirst { it.id == id }
         if (idx >= 0) {
             val updated = alarms[idx].copy(activated = false)
-            alarms[idx] = updated
+            viewModelScope.launch {
+                alarmDao.update(updated)
+            }
             cancelAlarm(updated)
         }
     }

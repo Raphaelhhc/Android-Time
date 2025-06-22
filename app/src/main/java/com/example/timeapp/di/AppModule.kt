@@ -3,7 +3,7 @@ package com.example.timeapp.di
 import android.content.Context
 import androidx.room.Room
 import com.example.timeapp.data.alarm.AlarmDao
-import com.example.timeapp.data.alarm.AlarmDataBase
+import com.example.timeapp.data.alarm.AlarmDatabase
 import com.example.timeapp.data.world_clock.WorldClockDao
 import com.example.timeapp.data.world_clock.WorldClockDatabase
 import com.example.timeapp.domain.WorldClockRepository
@@ -56,16 +56,16 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideAlarmDatabase(@ApplicationContext context: Context): AlarmDataBase {
+    fun provideAlarmDatabase(@ApplicationContext context: Context): AlarmDatabase {
         return Room.databaseBuilder(
             context,
-            AlarmDataBase::class.java,
+            AlarmDatabase::class.java,
             "alarm.db"
         ).build()
     }
 
     @Provides
-    fun provideAlarmDao(db: AlarmDataBase): AlarmDao {
+    fun provideAlarmDao(db: AlarmDatabase): AlarmDao {
         return db.alarmDao()
     }
 
