@@ -26,7 +26,6 @@ class AlarmViewModel @Inject constructor(
         viewModelScope.launch {
             alarmDao.getAllAlarmsFlow().collectLatest { stored ->
                 updateAlarms(stored)
-                Log.d("VM", "alarms: ${alarms.toList()}")
             }
         }
     }
@@ -72,9 +71,11 @@ class AlarmViewModel @Inject constructor(
     ) {
         val idx = alarms.indexOfFirst { it.id == id }
         if (idx >= 0) {
+            cancelAlarm(alarms[idx])
             val updated = alarms[idx].copy(alarmTime = alarmTime)
             viewModelScope.launch {
                 alarmDao.update(updated)
+                scheduleAlarm(updated)
             }
         }
     }

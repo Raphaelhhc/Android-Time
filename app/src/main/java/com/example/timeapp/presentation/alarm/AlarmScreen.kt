@@ -170,9 +170,6 @@ fun AlarmScreen(
                     },
                     onConfirm = { time ->
                         vm.editAlarm(alarm.id, time)
-                        if (alarm.activated) {
-                            vm.activateAlarm(alarm.id)
-                        }
                         isEditingAlarm = false
                         editingAlarmId = null
                     }
