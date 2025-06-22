@@ -1,20 +1,38 @@
 package com.example.timeapp.presentation.alarm
 
-import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.timeapp.data.alarm.Alarm
+import com.example.timeapp.data.alarm.AlarmDao
 import com.example.timeapp.presentation.alarm.notification.AlarmScheduler
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import java.time.LocalTime
 import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
 class AlarmViewModel @Inject constructor(
-    private val alarmScheduler: AlarmScheduler
+    private val alarmScheduler: AlarmScheduler,
+    private val alarmDao: AlarmDao
 ) : ViewModel() {
 
     val alarms = mutableStateListOf<Alarm>()
+
+    init {
+        viewModelScope.launch {
+            alarmDao.getAllAlarmsFlow().collectLatest { stored ->
+                updateAlarms(stored)
+            }
+        }
+    }
+
+    private fun updateAlarms(stored: List<Alarm>) {
+        alarms.clear()
+        stored.forEach { alarms.add(it) }
+    }
 
     fun addNewAlarm(
         alarmTime: LocalTime,
@@ -27,7 +45,9 @@ class AlarmViewModel @Inject constructor(
             alarmTime = alarmTime,
             activated = activated
         )
-        alarms.add(newAlarm)
+        viewModelScope.launch {
+            alarmDao.insert(newAlarm)
+        }
 
         if (newAlarm.activated) {
             scheduleAlarm(newAlarm)
@@ -38,7 +58,9 @@ class AlarmViewModel @Inject constructor(
         val alarm = alarms.firstOrNull { it.id == id }
         if (alarm != null) {
             if (alarm.activated) cancelAlarm(alarm)
-            alarms.remove(alarm)
+            viewModelScope.launch {
+                alarmDao.delete(alarm.id)
+            }
         }
     }
 

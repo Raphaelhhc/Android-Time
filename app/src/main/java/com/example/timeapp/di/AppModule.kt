@@ -2,6 +2,8 @@ package com.example.timeapp.di
 
 import android.content.Context
 import androidx.room.Room
+import com.example.timeapp.data.alarm.AlarmDao
+import com.example.timeapp.data.alarm.AlarmDataBase
 import com.example.timeapp.data.world_clock.WorldClockDao
 import com.example.timeapp.data.world_clock.WorldClockDatabase
 import com.example.timeapp.domain.WorldClockRepository
@@ -50,6 +52,21 @@ object AppModule {
         dao: WorldClockDao
     ): WorldClockRepository {
         return WorldClockRepository(context, dao)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAlarmDatabase(@ApplicationContext context: Context): AlarmDataBase {
+        return Room.databaseBuilder(
+            context,
+            AlarmDataBase::class.java,
+            "alarm.db"
+        ).build()
+    }
+
+    @Provides
+    fun provideAlarmDao(db: AlarmDataBase): AlarmDao {
+        return db.alarmDao()
     }
 
 }
